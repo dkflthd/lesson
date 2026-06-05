@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>실시간 설문</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>오늘 수업은 어땠나요?</h1>
+
+    <div class="buttons">
+      <button onclick="vote('good')">좋았어요</button>
+      <button onclick="vote('normal')">보통이에요</button>
+      <button onclick="vote('bad')">어려웠어요</button>
+    </div>
+
+    <h2>실시간 결과</h2>
+
+    <div class="result">
+      <p>좋았어요: <span id="goodCount">0</span>명</p>
+      <p>보통이에요: <span id="normalCount">0</span>명</p>
+      <p>어려웠어요: <span id="badCount">0</span>명</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "여기에_API_KEY",
+      authDomain: "여기에_AUTH_DOMAIN",
+      databaseURL: "여기에_DATABASE_URL",
+      projectId: "여기에_PROJECT_ID",
+      storageBucket: "여기에_STORAGE_BUCKET",
+      messagingSenderId: "여기에_SENDER_ID",
+      appId: "여기에_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.vote = function(choice) {
+      const countRef = ref(db, "survey/" + choice);
+
+      runTransaction(countRef, (currentValue) => {
+        return (currentValue || 0) + 1;
+      });
+    };
+
+    onValue(ref(db, "survey"), (snapshot) => {
+      const data = snapshot.val() || {};
+
+      document.getElementById("goodCount").textContent = data.good || 0;
+      document.getElementById("normalCount").textContent = data.normal || 0;
+      document.getElementById("badCount").textContent = data.bad || 0;
+    });
+  </script>
+</body>
+</html>
