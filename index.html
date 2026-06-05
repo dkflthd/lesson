@@ -9,57 +9,22 @@
 
   <div class="wrap">
     <section class="vote-box">
-      <h1>오늘 수업은 어땠나요?</h1>
-      <p>하나를 선택하면 실시간 결과에 반영됩니다.</p>
+      <h1 id="questionTitle">질문을 불러오는 중...</h1>
+<p>하나를 선택하면 실시간 결과에 반영됩니다.</p>
 
-      <div class="buttons">
-        <button onclick="vote('매우 좋음')">😄 매우 좋음</button>
-        <button onclick="vote('좋음')">🙂 좋음</button>
-        <button onclick="vote('보통')">😐 보통</button>
-        <button onclick="vote('어려움')">😵 어려움</button>
-      </div>
+<div id="buttons" class="buttons"></div>
 
-      <p id="message"></p>
+<p id="message"></p>
     </section>
 
     <section class="result-box">
       <h2>실시간 결과</h2>
 
-      <div class="bar-item">
-        <span>매우 좋음</span>
-        <div class="bar-bg">
-          <div id="bar1" class="bar"></div>
-        </div>
-        <strong id="count1">0명</strong>
-      </div>
+<div id="resultArea"></div>
 
-      <div class="bar-item">
-        <span>좋음</span>
-        <div class="bar-bg">
-          <div id="bar2" class="bar"></div>
-        </div>
-        <strong id="count2">0명</strong>
-      </div>
-
-      <div class="bar-item">
-        <span>보통</span>
-        <div class="bar-bg">
-          <div id="bar3" class="bar"></div>
-        </div>
-        <strong id="count3">0명</strong>
-      </div>
-
-      <div class="bar-item">
-        <span>어려움</span>
-        <div class="bar-bg">
-          <div id="bar4" class="bar"></div>
-        </div>
-        <strong id="count4">0명</strong>
-      </div>
-
-      <div class="total">
-        총 참여자: <span id="totalCount">0</span>명
-      </div>
+<div class="total">
+  총 참여자: <span id="totalCount">0</span>명
+</div>
     </section>
   </div>
 
