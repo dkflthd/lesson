@@ -1,4 +1,4 @@
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyFTFIDr8cmR8KmYQOiizCV1TIBTLQR4RVUrjIawBF6c0qKtfxUD01imQfc1HJ6wqDn/exec";
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxDJksg2aiyqMei3gGhZjE9zOuprbzJownZV0HTNAOhESlwCovPi6XW8w8_I3y3mR-x/exec";
 
 function vote(answer) {
   fetch(WEBAPP_URL, {
