@@ -1,61 +1,68 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>실시간 설문</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>실시간 수업 설문</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>오늘 수업은 어땠나요?</h1>
 
-    <div class="buttons">
-      <button onclick="vote('good')">좋았어요</button>
-      <button onclick="vote('normal')">보통이에요</button>
-      <button onclick="vote('bad')">어려웠어요</button>
-    </div>
+  <div class="wrap">
+    <section class="vote-box">
+      <h1>오늘 수업은 어땠나요?</h1>
+      <p>하나를 선택하면 실시간 결과에 반영됩니다.</p>
 
-    <h2>실시간 결과</h2>
+      <div class="buttons">
+        <button onclick="vote('매우 좋음')">😄 매우 좋음</button>
+        <button onclick="vote('좋음')">🙂 좋음</button>
+        <button onclick="vote('보통')">😐 보통</button>
+        <button onclick="vote('어려움')">😵 어려움</button>
+      </div>
 
-    <div class="result">
-      <p>좋았어요: <span id="goodCount">0</span>명</p>
-      <p>보통이에요: <span id="normalCount">0</span>명</p>
-      <p>어려웠어요: <span id="badCount">0</span>명</p>
-    </div>
+      <p id="message"></p>
+    </section>
+
+    <section class="result-box">
+      <h2>실시간 결과</h2>
+
+      <div class="bar-item">
+        <span>매우 좋음</span>
+        <div class="bar-bg">
+          <div id="bar1" class="bar"></div>
+        </div>
+        <strong id="count1">0명</strong>
+      </div>
+
+      <div class="bar-item">
+        <span>좋음</span>
+        <div class="bar-bg">
+          <div id="bar2" class="bar"></div>
+        </div>
+        <strong id="count2">0명</strong>
+      </div>
+
+      <div class="bar-item">
+        <span>보통</span>
+        <div class="bar-bg">
+          <div id="bar3" class="bar"></div>
+        </div>
+        <strong id="count3">0명</strong>
+      </div>
+
+      <div class="bar-item">
+        <span>어려움</span>
+        <div class="bar-bg">
+          <div id="bar4" class="bar"></div>
+        </div>
+        <strong id="count4">0명</strong>
+      </div>
+
+      <div class="total">
+        총 참여자: <span id="totalCount">0</span>명
+      </div>
+    </section>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "여기에_API_KEY",
-      authDomain: "여기에_AUTH_DOMAIN",
-      databaseURL: "여기에_DATABASE_URL",
-      projectId: "여기에_PROJECT_ID",
-      storageBucket: "여기에_STORAGE_BUCKET",
-      messagingSenderId: "여기에_SENDER_ID",
-      appId: "여기에_APP_ID"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    window.vote = function(choice) {
-      const countRef = ref(db, "survey/" + choice);
-
-      runTransaction(countRef, (currentValue) => {
-        return (currentValue || 0) + 1;
-      });
-    };
-
-    onValue(ref(db, "survey"), (snapshot) => {
-      const data = snapshot.val() || {};
-
-      document.getElementById("goodCount").textContent = data.good || 0;
-      document.getElementById("normalCount").textContent = data.normal || 0;
-      document.getElementById("badCount").textContent = data.bad || 0;
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
