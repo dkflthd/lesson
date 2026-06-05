@@ -1,37 +1,45 @@
 const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwgC75a--PjCmJRa3upPv6Bd6hrl5sp44WyN0ORAjg0Jwn3yTaHNY_EzLwkesFvaOiK/exec";
 
+
 function vote(answer) {
   fetch(WEBAPP_URL, {
     method: "POST",
+    mode: "no-cors",
     body: JSON.stringify({ answer: answer })
   });
 
   document.getElementById("message").innerText = "응답이 완료되었습니다!";
+  setTimeout(loadResult, 1000);
 }
 
 function loadResult() {
-  fetch(WEBAPP_URL)
-    .then(response => response.json())
-    .then(data => {
-      const veryGood = data["매우 좋음"] || 0;
-      const good = data["좋음"] || 0;
-      const normal = data["보통"] || 0;
-      const hard = data["어려움"] || 0;
+  const oldScript = document.getElementById("jsonpScript");
+  if (oldScript) oldScript.remove();
 
-      const total = veryGood + good + normal + hard;
+  const script = document.createElement("script");
+  script.id = "jsonpScript";
+  script.src = WEBAPP_URL + "?callback=showResult&t=" + new Date().getTime();
+  document.body.appendChild(script);
+}
 
-      updateBar("bar1", "count1", veryGood, total);
-      updateBar("bar2", "count2", good, total);
-      updateBar("bar3", "count3", normal, total);
-      updateBar("bar4", "count4", hard, total);
+function showResult(data) {
+  const veryGood = data["매우 좋음"] || 0;
+  const good = data["좋음"] || 0;
+  const normal = data["보통"] || 0;
+  const hard = data["어려움"] || 0;
 
-      document.getElementById("totalCount").innerText = total;
-    });
+  const total = veryGood + good + normal + hard;
+
+  updateBar("bar1", "count1", veryGood, total);
+  updateBar("bar2", "count2", good, total);
+  updateBar("bar3", "count3", normal, total);
+  updateBar("bar4", "count4", hard, total);
+
+  document.getElementById("totalCount").innerText = total;
 }
 
 function updateBar(barId, countId, count, total) {
   const percent = total === 0 ? 0 : (count / total) * 100;
-
   document.getElementById(barId).style.width = percent + "%";
   document.getElementById(countId).innerText = count + "명";
 }
