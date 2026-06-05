@@ -1,5 +1,6 @@
 const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxDJksg2aiyqMei3gGhZjE9zOuprbzJownZV0HTNAOhESlwCovPi6XW8w8_I3y3mR-x/exec";
 
+
 function vote(answer) {
   fetch(WEBAPP_URL, {
     method: "POST",
@@ -22,25 +23,40 @@ function loadResult() {
 }
 
 function showResult(data) {
-  const veryGood = data["매우 좋음"] || 0;
-  const good = data["좋음"] || 0;
-  const normal = data["보통"] || 0;
-  const hard = data["어려움"] || 0;
+  document.getElementById("questionTitle").innerText = data.question;
 
-  const total = veryGood + good + normal + hard;
+  const buttons = document.getElementById("buttons");
+  buttons.innerHTML = "";
 
-  updateBar("bar1", "count1", veryGood, total);
-  updateBar("bar2", "count2", good, total);
-  updateBar("bar3", "count3", normal, total);
-  updateBar("bar4", "count4", hard, total);
+  const resultArea = document.getElementById("resultArea");
+  resultArea.innerHTML = "";
+
+  let total = 0;
+
+  data.options.forEach(option => {
+    total += data.counts[option] || 0;
+  });
+
+  data.options.forEach(option => {
+    const count = data.counts[option] || 0;
+    const percent = total === 0 ? 0 : (count / total) * 100;
+
+    buttons.innerHTML += `
+      <button onclick="vote('${option}')">${option}</button>
+    `;
+
+    resultArea.innerHTML += `
+      <div class="bar-item">
+        <span>${option}</span>
+        <div class="bar-bg">
+          <div class="bar" style="width:${percent}%"></div>
+        </div>
+        <strong>${count}명</strong>
+      </div>
+    `;
+  });
 
   document.getElementById("totalCount").innerText = total;
-}
-
-function updateBar(barId, countId, count, total) {
-  const percent = total === 0 ? 0 : (count / total) * 100;
-  document.getElementById(barId).style.width = percent + "%";
-  document.getElementById(countId).innerText = count + "명";
 }
 
 loadResult();
